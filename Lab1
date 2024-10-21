@@ -1,0 +1,23 @@
+1) mkdir Parent
+   mkdir Parent/child1 Parent/child2
+2) cd Parent/child1
+   cat > one.txt
+   first child1
+   [Ctrl+D]
+   cat > two.txt
+   second child1
+   [Ctrl+D]
+   cat > three.txt
+   third child1
+   [Ctrl+D]
+3) cp one.txt ../child2
+4) cd ../child2
+   who|wc -l>q4
+   ls|wc -l>>q4
+5) ls a* A*
+6) ls -l|grep "^-"|wc -l>q6 (have to write ls -l because grep needs the info to find which is file)
+7) write c code
+   cc Hello.c && ./a.out
+8) wc -l Hello.c
+
+date;ls;pwd
