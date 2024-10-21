@@ -1,0 +1,147 @@
+LAB EXERCISE -I OUTPUTS
+
+1) /home/student,/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin
+
+ SHOWED NOTHING
+
+ student,/bin/sh,xterm-256color
+
+basically $indicates that the following word is a variable, so instead of displaying name of variable it will display value stored in it.
+The ones given in manual table are predefined variables.
+
+2) (To create variable)
+firstname=Rakesh
+lastname=Sharma (here first and lastname are local variables)
+(to display)
+echo $firstname $lastname
+(output)
+Rakesh Sharma
+
+export lastname (makes it env variable)
+(environment variables are shared by parent and all child scripts, but local only accesible to the one it was created in)
+sh (creates a child script for current script (our current is bash))
+echo $firstname $lastname
+(output)
+Sharma (firstname not displayed as it is not env variable)
+[Ctrl+D] (to end child script)
+echo $firstname $lastname (back in parent script)
+(output)
+Rakesh Sharma
+
+NOTE:you can change variable value same way you make a variable
+
+3)cat > script.sh
+echo the name of this script is $0
+echo the first argument is $1
+echo a list of all arguments is $*
+echo this script places the date into a temporary file called $1.$$ 
+# $1 is first argument $$ is process id if script so we are name the file Rahul.processid
+date>$1.$$
+#redirect the output of date
+ls $1.$$
+#list the file 
+#here if you do cat $1.$$ it will display the date
+rm $1.$$
+[Ctrl+D]
+chmod +x script.sh
+./script.sh Rahul Sachin Kumble
+
+(output)
+the name of this script is ./script.sh
+the first argument is Rahul
+a list of all arguments is Rahul Sachin Kumble
+this script places the date into a temporary file called Rahul.6107
+Rahul.6107
+
+NOTE:putting variable value in "" while assigning doesnt change anything
+putting varaible name in {} during echo changes nothing but if you want to do something like
+verb = sing
+(display singing)
+echo $verbing (this will consider verbing a variable)
+echo ${verb}ing (this displays singing)
+
+to read multiple words put space
+command can be either 1)read var1 var2 (or) 2)read {var1,var2}
+while reading
+disha anshu
+disha stored in var1 and anshu in var2 for both commands
+
+
+
+LAB EXERCISE -II outputs
+
+1)displays the word "done" after 10 seconds, ps is executed first
+
+2)(sleep 10; echo done) &
+  (ouputs process id)
+  7777 (this is the pid for above command)
+  kill 7777
+  (never displays done because process was killed)
+
+3)(type really fast or put it in a file or increase sleep time else all the commands will display before you finish typing)
+  (sleep 10; echo done 1) &
+  (output) 7835
+  (sleep 10; echo done 2) &
+  (output) 7839
+  echo done 3; wait; echo done 4
+  (output) done 3
+  done 1
+  done 2
+  done 4 (done 4 waits for all processes to terminate)
+  
+MANUAL CORRECTION - sort -o emp.txt emp.lst (this pastes the output of sorting emp.lst in emp.txt) (-o means paste output in diff file)
+  
+LAB EXERCISE -III outputs
+
+1) create file hello.c,test.c (any number of files with single letter extension)
+   ls *.[a-z]
+(output) hello.c test.c
+
+2)cat > q2.sh
+ls $1 $2
+[Ctrl+D]
+chmod +x q2.sh
+./q2.sh testq2 *.[a-z]   (testq2 is subdirectOry in WEEK2)
+(output)
+hello.c  //this is the file from present folder Week2  why is it displayed?
+
+testq2:
+hello2.c
+
+3) cat > q3.sh
+echo Number of users logged in :; who|wc -l
+[Ctrl+D]
+chmod +x q3.sh
+./q3.sh
+(OUTPUT)
+Number of users logged in :
+1
+
+4)cat > q4.sh
+echo Number of files:; ls -l|grep "^-"|wc -l
+chmod +x q4.sh
+./q4.sh
+(OUTPUT)
+Number of files:
+6
+
+5)cat > q5.sh
+cat $1>sorted.txt
+cat $2>sorted.txt
+sort -u -o sorted.txt sorted.txt
+chmod +x q5.sh
+/q5.sh sort1.txt sort2.txt
+ (for some reason omits 1) 
+ 
+6)cat > q6.sh
+cp $1 $2     
+chmod +x q6.sh
+./q6.sh *.c testq6
+
+
+
+
+
+
+
+
