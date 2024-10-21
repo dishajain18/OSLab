@@ -1,0 +1,5 @@
+executable - object code i.e a.out file
+
+/bin/ls  means find the command ls in the the given path
+
+you cannot use pipe (|) functionality in exec
