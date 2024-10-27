@@ -10,8 +10,6 @@ void* fib(void* param) {
     
     fibseries[0]=0;
     fibseries[1]=1;
- 
-    int a = 0, b = 1, temp;
     for (int i = 2; i <= n; i++) 
         fibseries[i] = fibseries[i-1] + fibseries[i-2];
     
