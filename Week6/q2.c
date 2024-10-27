@@ -20,5 +20,6 @@ printf("read %d bytes from the pipe: \"%s\"\n", n, buf);
 }
 else
 perror("read");
+close(fd);
 exit(0);
 }
