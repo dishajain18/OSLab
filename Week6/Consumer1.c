@@ -19,9 +19,9 @@ int main()
 	printf("Process %d result %d\n", getpid(), pipe_fd);
 	if (pipe_fd != -1) {
 		int i=0;
-		while(i < 4){
-		sleep(1);
+		while(1){
 		res = read(pipe_fd, buffer, sizeof(buffer));
+		if(res<=0) break;
 		printf("%d,%s\n",res,buffer);
 		bytes_read += res;
 		i++;
