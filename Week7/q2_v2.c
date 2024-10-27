@@ -1,102 +1,79 @@
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/types.h>
 #include <sys/ipc.h>
-#include <sys/shm.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 #include <sys/wait.h>
+#include <sys/shm.h>
 
-struct shared_use_st {
-    char alphabet;
-    int written_by_you;
+struct shared {
+    char c;          // Character to be processed
+    int written;     // Status indicator
 };
 
-int main() {
-    void *shared_memory = (void *)0;
-    struct shared_use_st *shared_stuff;
-    int shmid;
+int main()
+{
+    void* shared_memory = (void*)0;
+    struct shared* stuff;
+    int shmid=shmget((key_t)1234,sizeof(struct shared),0666|IPC_CREAT);
 
-    // Create shared memory
-    shmid = shmget((key_t)1234, sizeof(struct shared_use_st), 0666 | IPC_CREAT);
-    if (shmid == -1) {
-        fprintf(stderr, "shmget failed\n");
-        exit(EXIT_FAILURE);
-    }
+    int pid=fork();
+    if(pid==0)
+    {
+        shared_memory = shmat(shmid,NULL,0);
+        stuff = (struct shared*)shared_memory;
+        while(1)
+        {
 
-    // Attach to shared memory
-    shared_memory = shmat(shmid, (void *)0, 0);
-    if (shared_memory == (void *)-1) {
-        fprintf(stderr, "shmat failed\n");
-        exit(EXIT_FAILURE);
-    }
 
-    shared_stuff = (struct shared_use_st *)shared_memory;
-    shared_stuff->written_by_you = 0;
+            if(stuff->written==1)
+            {
+                if(stuff->c>=65 && stuff->c<=90)
+                    stuff->c = (stuff->c - 'A' + 1)%26 + 'A';
 
-    // Fork the process to create a child
-    pid_t pid = fork();
+                else if(stuff->c>=97 && stuff->c<=122)
+                    stuff->c = (stuff->c - 'a' + 1)%26 + 'a';
 
-    if (pid < 0) {
-        fprintf(stderr, "Fork failed\n");
-        exit(EXIT_FAILURE);
-    }
+                else{
+                    stuff->written=-1;
+                    break;
+                }
 
-    // Parent process
-    if (pid > 0) {
-        char c;
-        while (1) {
-            printf("Enter an English alphabet or '#' to exit: ");
-            scanf(" %c", &c);
-            if (c == '#') {
-                // Notify child to exit
-                shared_stuff->alphabet = '#';
-                shared_stuff->written_by_you = 1;
-                break; // Exit the loop
+                stuff->written=2;
+
+
             }
-
-            shared_stuff->alphabet = c;
-            shared_stuff->written_by_you = 1;
-
-            // Wait for the child to respond
-            while (shared_stuff->written_by_you);
-
-            // Display the response from the child
-            printf("Child responded with: %c\n", shared_stuff->alphabet);
         }
 
-        // Wait for the child process to finish
+        shmdt(shared_memory);
+        exit(0);
+
+    }
+    else{
+
+        shared_memory=shmat(shmid,NULL,0);
+        stuff=(struct shared*)shared_memory;
+        stuff->written=0;
+        while(1){
+            if(stuff->written==-1)
+                break;
+
+            if(stuff->written==1)
+                continue;
+            if(stuff->written==2)
+            {
+                printf("Alphabet changed to: %c\n",stuff->c);
+            }
+            stuff->written=0;
+            printf("Enter alphabet (anything else to exit): ");
+            scanf(" %c",&stuff->c);
+            stuff->written=1;
+        }
         wait(NULL);
-    } 
-    // Child process
-    else {
-        while (1) {
-            // Wait for the parent to write
-            while (shared_stuff->written_by_you == 0) {
-                sleep(1);
-            }
-
-            // Process the input character
-            char cc = shared_stuff->alphabet;
-            if (cc == '#') {
-                break; // Exit the child loop if '#' is received
-            }
-
-            if ((cc >= 'a' && cc <= 'z') || (cc >= 'A' && cc <= 'Z')) {
-                shared_stuff->alphabet = (cc == 'z') ? 'a' : (cc == 'Z') ? 'A' : cc + 1;
-            } else {
-                shared_stuff->alphabet = '*'; // invalid
-            }
-            shared_stuff->written_by_you = 0; // Indicate response is ready
-        }
+        shmdt(shared_memory);
+        shmctl(shmid,IPC_RMID,0);
+        exit(0);
     }
-
-    // Detach and remove shared memory
-    if (shmdt(shared_memory) == -1) {
-        fprintf(stderr, "shmdt failed\n");
-        exit(EXIT_FAILURE);
-    }
-    shmctl(shmid, IPC_RMID, 0);
-
-    return 0;
 }
