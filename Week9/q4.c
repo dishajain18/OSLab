@@ -43,8 +43,8 @@ int main() {
     int* evensum;
     int* oddsum;
 
-    pthread_create(&oddt, NULL, odd, (void*)&nums);
-    pthread_create(&event, NULL, even, (void*)&nums);
+    pthread_create(&oddt, NULL, odd, (void*)nums);
+    pthread_create(&event, NULL, even, (void*)nums);
 
     pthread_join(oddt, (void**)&oddsum);
     pthread_join(event, (void**)&evensum);
