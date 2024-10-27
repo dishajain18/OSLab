@@ -25,7 +25,7 @@ int main() {
     nums[0]=n;
     int* sum;
 
-    pthread_create(&thread, NULL, add, (void*)&nums);
+    pthread_create(&thread, NULL, add, (void*)nums);
 
     pthread_join(thread, (void**)&sum);
 
