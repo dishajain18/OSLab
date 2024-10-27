@@ -15,14 +15,12 @@ void FCFS(DSA requests[], int n, int start) {
     int total_distance = 0;
 
     printf("\nFCFS Disk Scheduling:\n");
-    printf("Move from %d to %d\n", current_position, requests[0].cyl);
-    
     for (int i = 0; i < n; i++) {
         int distance = abs(current_position - requests[i].cyl);
         total_distance += distance;
-        current_position = requests[i].cyl;
         printf("Move from %d to %d with Seek %d (Request ID: %d, Process ID: %d)\n",
                current_position, requests[i].cyl, distance, requests[i].reqId, requests[i].prid);
+        current_position = requests[i].cyl;
     }
 
     printf("\nTotal Seek Time (FCFS): %d\n", total_distance);
@@ -37,13 +35,13 @@ void SSTF(DSA requests[], int n, int start) {
     for (int i = 0; i < n; i++) served[i] = 0;
 
     printf("\nSSTF Disk Scheduling:\n");
-    
+
     for (int count = 0; count < n; count++) {
         int closest_index = -1;
         int closest_distance = INT_MAX;
 
         for (int i = 0; i < n; i++) {
-            if (!served[i]) {
+            if (!served[i]&&i!=current_position) {
                 int distance = abs(current_position - requests[i].cyl);
                 if (distance < closest_distance) {
                     closest_distance = distance;
@@ -55,10 +53,10 @@ void SSTF(DSA requests[], int n, int start) {
         if (closest_index != -1) {
             total_distance += closest_distance;
             printf("Move from %d to %d with Seek %d (Request ID: %d, Process ID: %d)\n",
-                   current_position, requests[closest_index].cyl, closest_distance, 
+                   current_position, requests[closest_index].cyl, closest_distance,
                    requests[closest_index].reqId, requests[closest_index].prid);
             current_position = requests[closest_index].cyl;
-            served[closest_index] = 1; 
+            served[closest_index] = 1;
         }
     }
 
