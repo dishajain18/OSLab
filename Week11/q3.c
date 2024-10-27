@@ -41,7 +41,7 @@ void SSTF(DSA requests[], int n, int start) {
         int closest_distance = INT_MAX;
 
         for (int i = 0; i < n; i++) {
-            if (!served[i]&&i!=current_position) {
+            if (!served[i]) {
                 int distance = abs(current_position - requests[i].cyl);
                 if (distance < closest_distance) {
                     closest_distance = distance;
