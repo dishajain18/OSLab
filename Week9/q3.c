@@ -39,7 +39,7 @@ int main() {
     scanf("%d %d",&nums[0],&nums[1]);
     int * result;
 
-    pthread_create(&thread, NULL, prime, (void*)&nums);
+    pthread_create(&thread, NULL, prime, (void*)nums);
 
     pthread_join(thread, (void**)&result);
     for(int i=1;i<result[0];i++)
