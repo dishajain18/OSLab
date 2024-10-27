@@ -6,9 +6,11 @@
 #include <limits.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <assert.h>
 #define FIFO_NAME "/tmp/my_fifo"
 int main(int argc,char* argv[])
 {
+	assert(argc==5);
 	int pipe_fd;
 	int res;
 	int open_mode = O_WRONLY;
