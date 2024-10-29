@@ -14,10 +14,13 @@
 4) cd ../child2
    who|wc -l>q4
    ls|wc -l>>q4
-5) ls a* A*
+5) ls [aA]*
 6) ls -l|grep "^-"|wc -l>q6 (have to write ls -l because grep needs the info to find which is file)
 7) write c code
    cc Hello.c && ./a.out
 8) wc -l Hello.c
 
 date;ls;pwd
+
+NOTE: TO PRINT ECHO WITHOUT GOING TO NEXT LINE USE "echo -n"
+TO PRINT * USING ECHO ENCLOSE IT IN SINGLE QUOTES NOT DOUBLE '*', else it will print all the file names instead of *
