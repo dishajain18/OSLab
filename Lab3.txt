@@ -1,0 +1,83 @@
+
+1)read n
+if (( n % 2 == 0 )); then
+echo even
+else
+echo odd
+fi
+
+
+2)read n
+x=1
+for(( i=1; i<=n; i++ )); do 
+echo $x 
+x=$(( x+2 )) 
+done
+
+3)
+echo enter a
+read a
+echo enter b
+read b
+echo enter c
+read c
+d=$(( b*b - 4*a*c ))
+case $d in 
+[1-9]*)
+echo real and diff roots
+sqrt=`echo "scale=2; sqrt($d)" | bc -l`
+root1=`echo "scale=2; (-$b-$sqrt)/2*$a" | bc -l`
+root2=`echo "scale=2; (-$b+$sqrt)/2*$a" | bc -l`
+echo root1 : $root1
+echo root2 : $root2
+;;
+0)
+echo real and equal roots
+root=$(( -b/2*a ))
+echo root : $root
+;;
+*)
+echo imaginary roots
+d=$(( -d ))
+sqrt=`echo "scale=2; sqrt($d)" | bc -l`
+real=`echo "scale=2; (-$b)/2*$a" | bc -l`
+imag=`echo "scale=2; ($sqrt)/2*$a" | bc -l`
+echo root1 : $real + i$imag
+echo root2 : $real - i$imag
+;;
+esac
+
+4)
+echo enter n
+read n
+i=$((n-1));
+fact=n
+while (( i>0 )); do
+fact=$(( fact*i ))
+i=$(( i-1 ))
+done
+echo $fact
+
+extra 1)
+echo "Enter a string:"
+read input
+
+# Reverse the string
+reverse=$(echo "$input" | rev)
+
+# Check if the input is the same as the reversed string
+if [ "$input" == "$reverse" ]; then
+    echo "The string is a palindrome."
+else
+    echo "The string is not a palindrome."
+fi
+
+extra2)
+echo enter array
+read -a arr
+n=${#arr[*]}
+sum=0
+for(( i=0; i<n; i++ )); do
+sum=$(( sum + arr[i] ))
+done
+echo $sum
